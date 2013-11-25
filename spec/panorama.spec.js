@@ -1,7 +1,7 @@
 describe('Backbone.View', function() {
   
   describe('::template', function() {
-    it('should return JST template by default', function() {
+    it('should use JST template by default', function() {
       var template = _.template('hello');
       window.JST['test'] = template;
       expect(Backbone.View.template('test')).toEqual(template);      
@@ -37,7 +37,19 @@ describe('Backbone.View', function() {
         expect(object.after).toBe(true);
       });
     });
-
+    
+    describe('template', function() {
+      beforeEach(function() {
+        this.view = new Backbone.View;
+        this.view.template = 'template';
+      });
+      
+      it('should render', function() {
+        var markup = '<div>test</div>';
+        window.JST['template'] = _.template(markup);
+        expect(this.view.render().el.innerHTML).toEqual(markup);        
+      });
+    });
   });
 
 });
