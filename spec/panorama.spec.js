@@ -20,7 +20,7 @@ describe('Backbone.View', function() {
       this.view = new Backbone.View;
     });
     
-    it('should return the view', function() {
+    it('should return itself', function() {
       expect(this.view.render()).toEqual(this.view);
     });
     
@@ -41,6 +41,16 @@ describe('Backbone.View', function() {
         });
         this.view.render();
         expect(object.after).toBe(true);
+      });
+      
+      it('should rebind click handlers', function() {
+        var object = {};
+        this.view.events = {
+          'click #button': function() { object.clicked = true; }
+        };
+        this.view.template = _.template('<div id="button">Click me!</div>');
+        this.view.render().$('#button').click();
+        expect(object.clicked).toBe(true);
       });
     });
     
@@ -91,6 +101,31 @@ describe('Backbone.View', function() {
         var data = { status: 'complete' };
         expect(this.view.render(data).$el.html()).toEqual('complete');
       });
+    });
+  });
+  
+  describe('#close', function() {
+    beforeEach(function() {
+      this.view = new Backbone.View;
+    });
+    
+    it('should return itself', function() {
+      expect(this.view.close()).toEqual(this.view);
+    });
+    
+    it('should prevent default event', function() {
+      var object = {};
+      var ev = { 
+        preventDefault: function() { object.prevented = true; } 
+      };
+      this.view.close(ev);
+      expect(object.prevented).toBe(true);
+    });
+    
+    it('should remove DOM node', function() {
+      $('body').append(this.view.render().el);
+      this.view.close();
+      expect(this.view.$el.parent().length).toEqual(0);
     });
   });
 

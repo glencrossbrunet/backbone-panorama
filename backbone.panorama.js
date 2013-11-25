@@ -18,6 +18,7 @@ _.extend(Backbone.View.prototype, {
       var markup = Backbone.View.template(this.template)(data);
       this.$el.html(markup);
     }
+    this.setElement(this.el);
     
     this.trigger('render:after');
     return this;
@@ -25,6 +26,13 @@ _.extend(Backbone.View.prototype, {
   
   templateData: function() {
     return this.model ? this.model.toJSON() : {};
+  },
+  
+  close: function(ev) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    
+    this.remove();    
+    return this;
   }
   
 });
