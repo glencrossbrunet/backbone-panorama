@@ -1,5 +1,13 @@
 describe('Backbone.View', function() {
   
+  describe('::template', function() {
+    it('should return JST template by default', function() {
+      var template = _.template('hello');
+      window.JST['test'] = template;
+      expect(Backbone.View.template('test')).toEqual(template);      
+    });
+  });
+  
   describe('#render', function() {
     it('should return the view', function() {
       var view = new Backbone.View;
@@ -29,6 +37,7 @@ describe('Backbone.View', function() {
         expect(object.after).toBe(true);
       });
     });
+
   });
 
 });

@@ -1,3 +1,11 @@
+_.extend(Backbone.View, {
+  
+  template: function(name) {
+    return JST[name];
+  }
+  
+});
+
 _.extend(Backbone.View.prototype, {
   
   render: function() {
