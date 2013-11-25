@@ -12,8 +12,7 @@ For example, you may render child views after the main view has rendered:
 Backbone.View.extend({
 
   initialize: function() {
-    _.bindAll(this, "renderChildren");
-    this.on("render:after", this.renderChildren);    
+    this.on("render:after", this.renderChildren, this);    
   },
   
   renderChildren: function() {
@@ -104,6 +103,37 @@ Backbone views get a `close` method that accepts an optional jQuery event to sto
     'click .close': 'close'
   }
 ```
+
+Close calls `remove` so custom animations may be used instead of the default view removal.
+
+```
+  remove: function() {
+    return this.$el.delay(50).fadeOut('slow');
+  }
+```
+
+When you close a view, it is assumed you want to destroy it for good. Panorama makes sure all objects attached to the view remove events. To be safe, stick to the syntax of listenTo instead of binding view events to the model. 
+
+```
+  initialize: function() {
+    this.listenTo(this.model, 'change', this.render);  // good
+    
+    this.model.on('change', this.render, this);        // discouraged, will be ok
+    
+    this.model.on('change', this.render.bind(this));   // bad, will leave a zombie view
+  }
+```
+
+#### `close:before`
+
+Triggered before the view is closed. It does not pass any parameters.
+
+#### `close:after`
+
+Triggered after the view remove method has settled. It does not pass any parameters.
+
+
+
 
 ## Notes
 
