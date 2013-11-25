@@ -52,7 +52,7 @@ view.render({ color: 'deepblue' })
 
 ### Declaring Templates
 
-Instead of defining a template function on each view, Panorama defines a `template` function on `Backbone.View` itself. That way each view declares it's template's name, which works well with automatic template injecting and compiling. It expects templates to be precompiled on the `window.JST` object.
+Instead of defining a template function on each view, Panorama defines a `template` function on `Backbone.View` itself. That way each view declares it's template's name, which works well with automatic template injecting and compiling. 
 
 ```js
 Backbone.View.template = function(name) {
@@ -60,11 +60,17 @@ Backbone.View.template = function(name) {
 };
 ```
 
+By default it expects templates to be precompiled on the `window.JST` object, or to be passed a precompiled template (i.e. passed a function).
+
 ```js
   template: 'foldername/templatename'
+  
+  // or
+  
+  template: _.template('<%= name %>')
 ```
 
-For inspiration on how to get the templates into JST see my article http://www.ajostrow.me/thoughts/organizing-client-templates. I tend to dynamically generate script tags from the application's templates folder.
+For inspiration on how to get the templates into JST see my article http://www.ajostrow.me/thoughts/organizing-client-templates. I tend to dynamically generate script tags from the application's templates folder on the server and include them with the page.
 
 ### Events
 

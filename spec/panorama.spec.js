@@ -1,10 +1,17 @@
 describe('Backbone.View', function() {
   
   describe('::template', function() {
+    beforeEach(function() {
+      this.template = _.template('hello');
+    });
+    
     it('should use JST template by default', function() {
-      var template = _.template('hello');
-      window.JST['test'] = template;
-      expect(Backbone.View.template('test')).toEqual(template);      
+      window.JST['test'] = this.template;
+      expect(Backbone.View.template('test')).toEqual(this.template);      
+    });
+    
+    it('should pass functions through', function() {
+      expect(Backbone.View.template(this.template)).toEqual(this.template);
     });
   });
   

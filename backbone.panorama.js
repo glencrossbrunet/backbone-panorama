@@ -1,6 +1,7 @@
 _.extend(Backbone.View, {
   
   template: function(name) {
+    if (_.isFunction(name)) return name;
     return window.JST[name];
   }
   
