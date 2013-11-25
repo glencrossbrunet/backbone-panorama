@@ -1,8 +1,7 @@
-(function() {  
-  window.onload = function() {
+(function() {
+  $(function() {
     var env = jasmine.getEnv();
     env.addReporter(new jasmine.HtmlReporter());
     env.execute();
-  };
-  
+  });
 })();
