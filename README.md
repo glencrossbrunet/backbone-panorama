@@ -112,7 +112,7 @@ Close calls `remove` so custom animations may be used instead of the default vie
   }
 ```
 
-When you close a view, it is assumed you want to destroy it for good. Panorama makes sure all objects attached to the view remove events. To be safe, stick to the syntax of listenTo instead of binding view events to the model. 
+When you close a view, it is assumed you want to destroy it for good. Panorama makes sure all objects attached to the view remove events. Even so, try to stick to `listenTo` syntax instead of binding view events to the model. 
 
 ```
   initialize: function() {
@@ -131,9 +131,6 @@ Triggered before the view is closed. It does not pass any parameters.
 #### `close:after`
 
 Triggered after the view remove method has settled. It does not pass any parameters.
-
-
-
 
 ## Notes
 

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Backbone Panorama | Render Example</title>
+  <style>
+    #main {
+      display: block;
+      margin: auto;
+      width: 80%;
+      height: 20em;
+      text-align: center;
+      background: #eee;
+    }
+    button {
+      font-size: 3em;
+      margin-top: 2.5em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <ul id="people"></div>
+  
+  <script src="../bower_components/underscore/underscore.js"></script>
+  <script src="../bower_components/jquery/jquery.js"></script>
+  <script src="../bower_components/backbone/backbone.js"></script>
+  <script src="../backbone.panorama.js"></script>
+  <script>
+    var PersonElement = Backbone.View.extend({
+      
+      tagName: 'li',
+      
+      className: 'person',
+      
+      template: _.template('<%= name %>')
+      
+    });
+    
+    var PeopleList = Backbone.View.extend({
+      
+      initialize: function() {
+        var coll = this.collection;
+        this.listenTo(coll, 'add', this.add);
+        this.on('render:after', function() {
+          coll.each(_.partial(coll.trigger, 'add'), coll);
+        });
+      },
+      
+      add: function(model) {
+        var view = new PersonElement({ model: model });
+        this.$el.append(view.render().el);
+      }
+      
+    });
+    
+    var people = new Backbone.Collection;
+    people.add({ name: 'Jack Daniels' });
+    people.add({ name: 'Sam Adams' });
+    
+    new PeopleList({ collection: people, el: '#people' }).render();
+    
+    setTimeout(function() { people.add({ name: 'Jim Beam' }); }, 1500);
+    setTimeout(function() { people.add({ name: 'Johnnie Walker' }) }, 1000);
+  </script>
+</body>
+</html>

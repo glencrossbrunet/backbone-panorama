@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Backbone Panorama | Close Example</title>
+  <style>
+    #main {
+      display: block;
+      margin: auto;
+      width: 80%;
+      height: 20em;
+      text-align: center;
+      background: #eee;
+    }
+    button {
+      font-size: 3em;
+      margin-top: 2.5em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="main">
+    <button type="button" class="close">Close</button>
+  </div>
+  
+  <script src="../bower_components/underscore/underscore.js"></script>
+  <script src="../bower_components/jquery/jquery.js"></script>
+  <script src="../bower_components/backbone/backbone.js"></script>
+  <script src="../backbone.panorama.js"></script>
+  <script>
+    var View = Backbone.View.extend({
+      events: {
+        'click .close': 'close'
+      }
+    });
+    new View({ el: '#main' });
+  </script>
+</body>
+</html>

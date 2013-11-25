@@ -21,15 +21,12 @@
       
       this.stopListening();
       _.each(this, maybeOff, this);
+      this.remove();
       
-      if (this.rm) this.rm();
-      else this.remove();
-      var self = this;
       $(this.$el).promise().done(function() {
-        self.trigger('close:after');
-        self.off();
-      });
-      
+        this.trigger('close:after');
+        this.off();
+      }.bind(this));
       return this;
     },
   
