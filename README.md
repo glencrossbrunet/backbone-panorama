@@ -1,4 +1,13 @@
 # backbone-panorama
 
-Panorama aims to aid making Backbone views more declarative. Most views will need to close gracefully and render a template contained in the `window.JST` global object. 
+> declarative Backbone views
 
+### Events
+
+#### `render:before`
+
+Triggered before the view is rendered. It does not pass any parameters.
+
+#### `render:after`
+
+Triggered after the view has rendered. It does not pass any parameters.
