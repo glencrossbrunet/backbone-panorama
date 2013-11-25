@@ -1,13 +1,18 @@
 describe('Backbone.View', function() {
   
   describe('#render', function() {
+    it('should return the view', function() {
+      var view = new Backbone.View;
+      expect(view.render()).toEqual(view);
+    });
+    
     describe('events', function() {
       var object = {};
       
       beforeEach(function() {
         this.view = new Backbone.View;
       });
-      
+            
       it('should trigger render:before', function() {
         this.view.on('render:before', function() {
           object.before = true;
