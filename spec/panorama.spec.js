@@ -214,5 +214,49 @@ describe('Backbone.View', function() {
       expect(object.custom).toBe(true);
     });
   });
+  
+  describe('#append', function() {
+    beforeEach(function() {
+      this.view = new Backbone.View;
+      this.child = new Backbone.View({ tagName: 'p' });
+    });
+    
+    it('should return itself', function() {
+      expect(this.view.append(this.child)).toEqual(this.view);
+    });
+    
+    it('should default to append in DOM elmeent', function() {
+      $('body').append(this.view.el);
+      this.view.append(this.child);
+      expect($('p', 'body').length).toEqual(1);
+      this.view.close();
+    });
+    
+    it('should render the child view', function() {
+      var object = {};
+      this.child.on('render:before', function() { object.render = true; });
+      this.view.append(this.child);
+      expect(object.render).toBe(true);
+    });
+    
+    describe('child view', function() {
+      beforeEach(function() {
+        var object = this.object = {};
+        this.child.on('close:before', function() { object.close = true; });
+        this.view.append(this.child);
+      });
+      
+      it('should close on parent close', function() {
+        this.view.close();
+        expect(this.object.close).toBe(true);
+      });
+      
+      it('should close on parent render', function() {
+        this.view.render();
+        expect(this.object.close).toBe(true);
+      });
+    });
+
+  });
 
 });

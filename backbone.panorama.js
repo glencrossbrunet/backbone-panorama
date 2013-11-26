@@ -60,6 +60,12 @@
         if (_.isFunction(handler)) { handler.apply(this, _.rest(arguments)); }
       }
       return Backbone.Events.trigger.apply(this, _.toArray(arguments));
+    },
+    
+    append: function(view) {
+      view.listenTo(this, 'close:before render:before', view.close);
+      this.$el.append(view.render().el);
+      return this;
     }
   
   });
