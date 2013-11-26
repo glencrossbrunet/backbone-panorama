@@ -191,5 +191,21 @@ describe('Backbone.View', function() {
       expect(object.triggered).toBe(undefined);
     });
   });
+  
+  describe('#trigger', function() {
+    it('should allow declared events', function() {
+      var object = {};
+      this.view = new Backbone.View({
+        events: {
+          'custom': 'custom'
+        }
+      });
+      this.view.custom = function() {
+        object.custom = true;
+      };
+      this.view.trigger('custom');
+      expect(object.custom).toBe(true);
+    });
+  });
 
 });

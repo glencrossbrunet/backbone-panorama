@@ -94,6 +94,20 @@ DOM events are re-bound when the view is rendered. This sounds obvious, but norm
   }
 ```
 
+Panorama overrides the `trigger` method so that all events can be declared in the events object.
+
+```
+  events: {
+    "custom": "customMethod"
+  }
+```
+
+Which is useful for render and close events, but also for trigger events. 
+
+```
+view.trigger('custom');
+```
+
 ### Close
 
 Backbone views get a `close` method that accepts an optional jQuery event to stop event propagation. This allows for declarative close click handlers. 

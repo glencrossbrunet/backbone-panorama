@@ -12,7 +12,7 @@
   function maybeOff(object, key) {
     if (_.isFunction(object.off) && '$el' !== key) object.off(null, null, this);
   }
-  
+    
   _.extend(View.prototype, {
   
     close: function(ev) {
@@ -47,6 +47,15 @@
   
     templateData: function() {
       return this.model ? this.model.toJSON() : {};
+    },
+    
+    trigger: function(name) {
+      if (_.isObject(this.events)) {
+        var handler = this.events[name];
+        if (_.isString(handler)) { handler = this[handler]; }
+        if (_.isFunction(handler)) { handler.apply(this, _.rest(arguments)); }
+      }
+      return Backbone.Events.trigger.apply(this, _.toArray(arguments));
     }
   
   });
