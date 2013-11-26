@@ -4,38 +4,67 @@
 
 ### Render
 
-Backbone comes with `render` as a no-op. Panorama overrides `render` with more powerful defaults. Views will now trigger before and after events and render a declared template with declared template data.
+Backbone comes with `render` as a no-op. Panorama overrides `render` with more powerful defaults. Views trigger before and after events and render a declared template with declared template data.
 
-For example, you may render child views after the main view has rendered:
+#### `render:before` and `render:after`
+
+> Triggered before the view is rendered. No parameters are passed.
+
+Example usage could be fading in after the html is rendered. 
 
 ```js
 Backbone.View.extend({
 
   initialize: function() {
-    this.on("render:after", this.renderChildren, this);    
+    this.on("render:after", this.fadeIn, this);
   },
   
-  renderChildren: function() {
-    // render this.collection
+  fadeIn: function() {
+    this.$el.fadeIn("slow");
   }
 
 });
 ```
 
-Calling `view.render()` will trigger the callback. I find this useful for manually triggering `add` events on a collection to which the view is listening to render lists. 
+We'll get into templates and template data further down the page. 
 
-#### `render:before`
+### Events
 
-Triggered before the view is rendered. It does not pass any parameters.
+DOM events are re-bound when the view is rendered. This sounds obvious, but normally when the HTML of the view node is replaced, declared click handlers on DOM elements within the view node will never fire. 
 
-#### `render:after`
+```
+  events: {
+    "click #action": "handler"
+  },
+  
+  handler: function(ev) {
+    // this would never be called with normal backbone views
+  }
+```
 
-Triggered after the view has rendered. It does not pass any parameters.
+Panorama augments the `trigger` method so that all events can be declared in the events object. 
 
+```
+  events: {
+    "render:after": "fadeIn"
+  }
+```
+
+Custom events may be declared and triggered as well. 
+
+```
+  events: {
+    "custom": "customMethod"
+  }
+```
+
+```
+view.trigger("custom");
+```
 
 ### Template Data
 
-You may define template data. By default it returns the associated model as json, or an empty object. 
+Template data by default is the associated model as json, or an empty object if there is no model. It usually should be overridden to provide the data needed for rendering the template. 
 
 ```js
   templateData: function() {
@@ -58,7 +87,7 @@ Template data passed directly to the render invocation will take precedence over
 view.render({ color: "deepblue" })   // overrides "blue"
 ```
 
-### Declaring Templates
+### Template
 
 Instead of defining a template function on each view, Panorama defines a `template` function on `Backbone.View` itself. That way each view declares it's template's name, which works well with automatic template injecting and compiling. 
 
@@ -80,71 +109,72 @@ By default it expects templates to be precompiled on the `window.JST` object, or
 
 For inspiration on how to get the templates into JST see my article http://www.ajostrow.me/thoughts/organizing-client-templates. I tend to dynamically generate script tags from the application's templates folder on the server and include them with the page.
 
-### Events
-
-DOM events are re-bound when the view is rendered. This sounds obvious, but normally when the HTML of the view node is replaced, declared click handlers on DOM elements within the view node will never fire. 
-
-```
-  events: {
-    "click #action": "viewMethod"
-  },
-  
-  viewMethod: function(ev) {
-    // this is never called if you're not using Panorama
-  }
-```
-
-Panorama overrides the `trigger` method so that all events can be declared in the events object.
-
-```
-  events: {
-    "custom": "customMethod"
-  }
-```
-
-Which is useful for render and close events, but also for trigger events. 
-
-```
-view.trigger('custom');
-```
-
 ### Close
 
-Backbone views get a `close` method that accepts an optional jQuery event to stop event propagation. This allows for declarative close click handlers. 
+Views get a `close` method that accepts an optional jQuery event to prevent propagation. This allows for declarative close click handlers. 
 
 ```
   events: {
-    'click .close': 'close'
+    "click .close": "close"
   }
 ```
 
-Close calls `remove` so custom animations may be used instead of the default view removal.
+Close fires before and after events much like render.
+
+#### `close:before` and `close:after`
+
+> Triggered before the view is closed and after the view remove method has settled. No parameters are passed.
+
+Calling `close` in turn calls `remove` so custom animations may be used instead of the default view removal.
 
 ```
   remove: function() {
-    return this.$el.delay(50).fadeOut('slow');
+    return this.$el.delay(50).fadeOut("slow");
   }
 ```
 
-When you close a view, it is assumed you want to destroy it for good. Panorama makes sure all objects attached to the view remove events. Even so, try to stick to `listenTo` syntax instead of binding view events to the model. 
+When a view is closed, it is assumed is should be destroyed for good. Panorama makes sure all objects attached to the view remove events. Even so, try to stick to `listenTo` syntax instead of binding view events to the model. 
 
 ```
   initialize: function() {
-    this.listenTo(this.model, 'change', this.render);  // good
+    this.listenTo(this.model, "change", this.render);  // good
     
-    this.model.on('change', this.render, this);        // discouraged, will be ok
+    this.model.on("change", this.render, this);        // discouraged, will be ok
     
-    this.model.on('change', this.render.bind(this));   // bad, will leave a zombie view
+    this.model.on("change", this.render.bind(this));   // bad, will leave a zombie view
   }
 ```
 
-#### `close:before`
+### Add
 
-Triggered before the view is closed. It does not pass any parameters.
+Most apps of size need to render hierarchies of views and gracefully close them. The `add` method helps by rendering the child view and setting up a listener to close the child view when the parent view is re-rendered or closed. 
 
-#### `close:after`
+```js
+   initialize: function() {
+     this.listenTo(this.collection, "add", this.add);
+   }
+```
 
-Triggered after the view remove method has settled. It does not pass any parameters.
+It defaults to appending the rendered child node inside the parent node. The DOM node and action may both optionally be specified.
+
+```js
+parent.add(view);                          // append to this.$el
+
+parent.add(view, "#children");             // append to this.$('#children')
+
+parent.add(view, "prepend");               // prepend to this.$el
+
+parent.add(view, "prepend", "#children")   // prepend to this.$('#children')
+```
+
+Later if you render or close the parent view, the child view and all traces of it will safely disappear. 
+
+```js
+parent.render()
+parent.close()                             // all child views closed
+```
+
+This allows one close button to remove an entire view hierarchy without any memory leaks (zombie views). 
 
 ## Notes
 
@@ -154,6 +184,8 @@ To use Panorama, copy the `backbone.panorama.js` file to your project, and inclu
 <script src="/path/to/backbone.js"></script>
 <script src="/path/to/backbone.panorama.js"></script>
 ```
+
+Please report any bugs or unexpected behavior so I can fix them! Pull requests with tests very much encouraged. Feel free to suggest new features as well.   
 
 ### License
 

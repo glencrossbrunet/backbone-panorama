@@ -215,19 +215,19 @@ describe('Backbone.View', function() {
     });
   });
   
-  describe('#append', function() {
+  describe('#add', function() {
     beforeEach(function() {
       this.view = new Backbone.View;
       this.child = new Backbone.View({ tagName: 'p' });
     });
     
     it('should return itself', function() {
-      expect(this.view.append(this.child)).toEqual(this.view);
+      expect(this.view.add(this.child)).toEqual(this.view);
     });
     
     it('should default to append in DOM elmeent', function() {
       $('body').append(this.view.el);
-      this.view.append(this.child);
+      this.view.add(this.child);
       expect($('p', 'body').length).toEqual(1);
       this.view.close();
     });
@@ -235,7 +235,7 @@ describe('Backbone.View', function() {
     it('should render the child view', function() {
       var object = {};
       this.child.on('render:before', function() { object.render = true; });
-      this.view.append(this.child);
+      this.view.add(this.child);
       expect(object.render).toBe(true);
     });
     
@@ -243,7 +243,7 @@ describe('Backbone.View', function() {
       beforeEach(function() {
         var object = this.object = {};
         this.child.on('close:before', function() { object.close = true; });
-        this.view.append(this.child);
+        this.view.add(this.child);
       });
       
       it('should close on parent close', function() {
@@ -264,20 +264,20 @@ describe('Backbone.View', function() {
       });
       
       it('should append to node', function() {
-        this.view.append(this.child, this.view.$('.container'));
+        this.view.add(this.child, this.view.$('.container'));
         expect(this.view.$('.container').find('p').length).toEqual(1);
       });
       
       it('should append to selector', function() {
-        this.view.append(this.child, '.container');
+        this.view.add(this.child, '.container');
         expect(this.view.$('.container').find('p').length).toEqual(1);
       });
     });
     
-    
-    
-    it('should attach to custom selector', function() {
-      this.view.template
+    it('should allow custom jQuery action', function() {
+      this.view.template = _.template('<span>hello</span>');
+      this.view.render().add(this.child, 'prepend');
+      expect(this.view.$el.children()[0]).toEqual(this.child.el);
     });
   });
 
