@@ -1,4 +1,4 @@
-// Backbone Panorama v0.0.4
+// Backbone Panorama v0.0.5
 // (c) 2013 MIT License
 
 (function(View) {
