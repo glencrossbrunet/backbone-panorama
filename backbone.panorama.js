@@ -62,9 +62,15 @@
       return Backbone.Events.trigger.apply(this, _.toArray(arguments));
     },
     
-    append: function(view) {
+    append: function(view, el) {
       view.listenTo(this, 'close:before render:before', view.close);
-      this.$el.append(view.render().el);
+      
+      var $el;
+      if (_.isUndefined(el)) $el = this.$el;
+      else if (_.isString(el)) $el = this.$(el);
+      else $el = el;
+      
+      $el.append(view.render().el);
       return this;
     }
   

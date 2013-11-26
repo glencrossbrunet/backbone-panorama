@@ -256,7 +256,29 @@ describe('Backbone.View', function() {
         expect(this.object.close).toBe(true);
       });
     });
-
+    
+    describe('specify DOM', function() {
+      beforeEach(function() {
+        this.view.template = _.template('<div class="container"></div>');
+        this.view.render();
+      });
+      
+      it('should append to node', function() {
+        this.view.append(this.child, this.view.$('.container'));
+        expect(this.view.$('.container').find('p').length).toEqual(1);
+      });
+      
+      it('should append to selector', function() {
+        this.view.append(this.child, '.container');
+        expect(this.view.$('.container').find('p').length).toEqual(1);
+      });
+    });
+    
+    
+    
+    it('should attach to custom selector', function() {
+      this.view.template
+    });
   });
 
 });
