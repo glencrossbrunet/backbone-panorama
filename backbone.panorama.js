@@ -13,7 +13,8 @@
   });
   
   function maybeOff(object, key) {
-    if (_.isFunction(object.off) && '$el' !== key) object.off(null, null, this);
+    var isListener = _.isObject(object) && _.isFunction(object.off);
+    if (isListener && '$el' !== key) object.off(null, null, this);
   }
     
   _.extend(View.prototype, {

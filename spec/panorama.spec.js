@@ -149,6 +149,13 @@ describe('Backbone.View', function() {
       expect(object.triggered).toBe(undefined);
     });
     
+    it('should not trip on nulls', function() {
+      this.view.property = null;
+      this.view.close();
+      // no error thrown
+      expect(true).toBe(true);
+    });
+    
     it('should trigger close:before', function() {
       var object = {};
       this.view.on('close:before', function() {
