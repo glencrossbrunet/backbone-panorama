@@ -1,4 +1,4 @@
-# backbone-panorama
+# backbone-panorama ![Build Status](https://travis-ci.org/glencrossbrunet/backbone-panorama.png?branch=master)
 
 > declarative Backbone views
 
