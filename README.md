@@ -187,9 +187,7 @@ To use Panorama, copy the `backbone.panorama.js` file to your project, and inclu
 
 Please report any bugs or unexpected behavior so I can fix them! Pull requests with tests very much encouraged. Feel free to suggest new features as well.   
 
-### License
-
-MIT
+License: MIT
 
 ---
 
