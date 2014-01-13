@@ -7,7 +7,6 @@
   "main": "backbone.panorama.js",
   "license": "MIT",
   "homepage": "http://github.com/glencrossbrunet/backbone-panorama",
-  "private": true,
   "ignore": [
     "**/.*",
     "bower_components",
