@@ -109,6 +109,20 @@ By default it expects templates to be precompiled on the `window.JST` object, or
 
 For inspiration on how to get the templates into JST see my article http://www.ajostrow.me/thoughts/organizing-client-templates. I tend to dynamically generate script tags from the application's templates folder on the server and include them with the page.
 
+### Title
+
+Each view may optionally declare a title. When rendered, the title of the page is updated. 
+
+```js
+  title: 'Page Title'
+
+  // or
+
+  title: function() {
+    return 'Main Site - ' + this.model.get('title');
+  }
+```
+
 ### Close
 
 Views get a `close` method that accepts an optional jQuery event to prevent propagation. This allows for declarative close click handlers. 

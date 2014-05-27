@@ -36,7 +36,10 @@
   
     render: function(optionalData) {
       this.trigger('render:before');
-    
+      if (this.title) {
+        var title = _.result(this, 'title');
+        $('title').text(title);
+      }
       if (this.template) {
         var data = _.result(this, 'templateData');
         _.extend(data, optionalData);

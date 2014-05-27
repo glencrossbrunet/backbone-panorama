@@ -281,4 +281,25 @@ describe('Backbone.View', function() {
     });
   });
 
+  describe('#title', function() {
+    beforeEach(function() {
+      this.view = new Backbone.View;
+    });
+
+    it('should set title if string', function() {
+      this.view.title = 'Page Title';
+      this.view.render();
+      expect($('title').text()).toEqual('Page Title');
+    });
+
+    it('should set title if function', function() {
+      this.view.model = new Backbone.Model({ name: 'Person Name' });
+      this.view.title = function() {
+        return this.model.get('name');
+      };
+      this.view.render();
+      expect($('title').text()).toEqual('Person Name');
+    });
+  });
+
 });
